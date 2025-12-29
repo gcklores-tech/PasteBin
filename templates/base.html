@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paste Site</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            color: #e0e0e0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        a {
+            color: #00d9ff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #00ffff;
+        }
+
+        /* Navigation Bar */
+        .navbar {
+            background: rgba(15, 15, 30, 0.95);
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-left {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .user-info {
+            background: rgba(0, 217, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        /* Box Styling */
+        .box {
+            background: rgba(20, 25, 50, 0.8);
+            padding: 20px;
+            margin: 15px auto;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            max-width: 900px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 217, 255, 0.1);
+        }
+
+        /* Forms */
+        input, textarea, button {
+            background: rgba(30, 40, 70, 0.8);
+            color: #e0e0e0;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00d9ff;
+            background: rgba(30, 40, 70, 0.95);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #00d9ff 0%, #00ffff 100%);
+            color: #0a0a15;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        textarea {
+            resize: vertical;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+        }
+
+        /* Search Bar */
+        .search-container {
+            max-width: 900px;
+            margin: 20px auto;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-box input {
+            flex: 1;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+        }
+
+        /* Paste Cards */
+        .paste-item {
+            background: rgba(20, 25, 50, 0.8);
+            padding: 20px;
+            margin: 15px auto;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.15);
+            max-width: 900px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .paste-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 217, 255, 0.1);
+            border-color: rgba(0, 217, 255, 0.3);
+        }
+
+        .paste-item.pinned {
+            border-left: 4px solid #00d9ff;
+            background: rgba(0, 217, 255, 0.05);
+        }
+
+        .paste-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .paste-title {
+            font-size: 1.4em;
+            color: #00d9ff;
+            margin-bottom: 5px;
+        }
+
+        .paste-title a {
+            color: #00d9ff;
+        }
+
+        .paste-title a:hover {
+            color: #00ffff;
+        }
+
+        .paste-badge {
+            display: inline-block;
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+
+        .paste-meta {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9em;
+            color: #a0a0a0;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .meta-item a {
+            color: #00d9ff;
+        }
+
+        .meta-item a:hover {
+            color: #00ffff;
+        }
+
+        .paste-tags {
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag {
+            background: rgba(0, 217, 255, 0.15);
+            color: #00ffff;
+            padding: 4px 10px;
+            border-radius: 16px;
+            font-size: 0.85em;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .tag:hover {
+            background: rgba(0, 217, 255, 0.25);
+        }
+
+        .paste-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .paste-actions form {
+            display: inline;
+        }
+
+        .paste-actions button {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            margin: 0;
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .paste-actions button:hover {
+            background: rgba(0, 217, 255, 0.3);
+        }
+
+        .paste-actions a {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            background: rgba(0, 217, 255, 0.2);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 6px;
+            display: inline-block;
+            color: #00d9ff;
+            transition: all 0.3s ease;
+        }
+
+        .paste-actions a:hover {
+            background: rgba(0, 217, 255, 0.3);
+        }
+
+        /* Paste View */
+        .paste-view {
+            background: rgba(20, 25, 50, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.15);
+        }
+
+        .paste-view h2 {
+            color: #00d9ff;
+            margin-bottom: 15px;
+            font-size: 2em;
+        }
+
+        .paste-view pre {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            border: 1px solid rgba(0, 217, 255, 0.1);
+            margin-bottom: 15px;
+        }
+
+        .paste-view small {
+            color: #a0a0a0;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-left, .nav-right {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .paste-header {
+                flex-direction: column;
+            }
+
+            .paste-meta {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="nav-left">
+            <a href="/">🏠 Home</a>
+            <a href="/new">📝 New Paste</a>
+            <a href="/users">👥 Users</a>
+        </div>
+        <div class="nav-right">
+            {% if current_user.is_authenticated %}
+                <span class="user-info">👤 {{ current_user.username }} ({{ current_user.rank }})</span>
+                {% if current_user.rank == 'OWNER' %}
+                <a href="/admin">⚙️ Admin</a>
+                {% endif %}
+                <a href="/logout">🚪 Logout</a>
+            {% else %}
+                <a href="/login">🔓 Login</a>
+                <a href="/register">📋 Register</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% block body %}{% endblock %}
+</body>
+</html>

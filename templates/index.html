@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="search-container">
+    <form method="get" class="search-box">
+        <input type="text" name="q" placeholder="🔍 Search pastes by title, content, or tags..." value="{{ request.args.get('q', '') }}">
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+{% if not pastes %}
+<div class="box" style="text-align: center; margin-top: 40px;">
+    <h3>No pastes found</h3>
+    <p style="color: #a0a0a0;">Create your first paste by clicking <a href="/new">New Paste</a></p>
+</div>
+{% else %}
+{% for p in pastes %}
+<div class="paste-item {% if p[7] %}pinned{% endif %}">
+    <div class="paste-header">
+        <div>
+            <div class="paste-title">
+                <a href="/paste/{{p[0]}}">{{ p[1] if p[1] else 'Untitled' }}</a>
+                {% if p[7] %}<span class="paste-badge">📌 Pinned</span>{% endif %}
+                {% if is_new_paste(p[5]) %}<span class="paste-badge" style="background: rgba(255, 165, 0, 0.2); color: #ffa500;">🔥 New</span>{% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="paste-meta">
+        <div class="meta-item">👤 <strong>{{ p[3] }}</strong></div>
+        <div class="meta-item">
+            <a href="/paste/{{p[0]}}?sort=views" title="Click to view details">👁️ {{ p[4] }} view{{ 's' if p[4] != 1 else '' }}</a>
+        </div>
+        <div class="meta-item">⏱️ {{ get_relative_time(p[5]) }}</div>
+    </div>
+
+    {% if p[6] %}
+    <div class="paste-tags">
+        {% for tag in p[6].split(',') %}
+        <a href="/?q={{ tag.strip() }}" class="tag">🏷️ {{ tag.strip() }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if current_user.is_authenticated and current_user.rank in ["OWNER","MANAGER","MOD"] %}
+    <div class="paste-actions">
+        <form method="post" action="/pin/{{p[0]}}" style="display: inline;">
+            <button type="submit">{% if p[7] %}📌 Unpin{% else %}📍 Pin{% endif %}</button>
+        </form>
+        <a href="/delete/{{p[0]}}" onclick="return confirm('Delete this paste?')">🗑️ Delete</a>
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% endblock %}
