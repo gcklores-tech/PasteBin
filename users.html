@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block body %}
+
+<div class="box" style="max-width: 900px; margin: 30px auto;">
+    <h2 style="color: #00d9ff; margin-bottom: 20px;">👥 All Users</h2>
+    <p style="color: #a0a0a0; margin-bottom: 20px;">Total Users: <strong>{{ users|length }}</strong></p>
+    
+    {% if users %}
+    <div style="background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 6px; border: 1px solid rgba(0, 217, 255, 0.1); overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 2px solid rgba(0, 217, 255, 0.2);">
+                <th style="text-align: left; padding: 12px; color: #00d9ff; font-weight: 600;">Username</th>
+                <th style="text-align: left; padding: 12px; color: #00d9ff; font-weight: 600;">Rank</th>
+            </tr>
+            {% for u in users %}
+            <tr style="border-bottom: 1px solid rgba(0, 217, 255, 0.1);">
+                <td style="padding: 12px; color: #e0e0e0;">
+                    👤 {{ u[1] }}
+                    {% if current_user.is_authenticated and current_user.username == u[1] %}
+                    <span style="color: #a0a0a0; font-size: 0.85em;"> (You)</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 12px;">
+                    <span style="background: rgba(0, 217, 255, 0.2); color: #00d9ff; padding: 6px 10px; border-radius: 4px; font-weight: 600;">
+                        {{ u[2] }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    {% else %}
+    <p style="color: #a0a0a0;">No users yet</p>
+    {% endif %}
+
+    <div style="margin-top: 20px;">
+        <a href="/" style="padding: 10px 12px; background: rgba(0, 217, 255, 0.2); border: 1px solid rgba(0, 217, 255, 0.3); border-radius: 6px; display: inline-block;">← Back to Home</a>
+    </div>
+</div>
+
+{% endblock %}

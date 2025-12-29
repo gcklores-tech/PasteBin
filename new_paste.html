@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="box" style="max-width: 900px; margin: 30px auto;">
+    <h2 style="color: #00d9ff; margin-bottom: 20px;">📝 Create New Paste</h2>
+    <form method="post">
+        <input type="text" name="title" placeholder="Paste Title (optional)" required style="margin-bottom: 15px;">
+        
+        <label style="display: block; margin-bottom: 8px; color: #a0a0a0;">Paste Content:</label>
+        <textarea name="content" rows="18" placeholder="Paste your code or text here..." required></textarea>
+        
+        <label style="display: block; margin-bottom: 8px; color: #a0a0a0;">Tags (comma-separated):</label>
+        <input type="text" name="tags" placeholder="e.g., python, bug-fix, urgent" style="margin-bottom: 15px;">
+        
+        <button type="submit" style="width: 100%; padding: 12px;">Create Paste 🚀</button>
+    </form>
+</div>
+{% endblock %}
